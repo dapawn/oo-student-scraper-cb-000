@@ -43,7 +43,7 @@ class Scraper
         attributes[:blog] = social
       end
     end
-    
+
     attributes
   end
 
