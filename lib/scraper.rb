@@ -17,7 +17,7 @@ class Scraper
         :name => student.css("div h4").text,
         :location => student.css("div p").text,
         :profile_url => profile_url
-      }.merge(self.scrape_profile_page(index_url.sub(/index\.html/,"") + profile_url))
+      }#.merge(self.scrape_profile_page(index_url.sub(/index\.html/,"") + profile_url))
     end
 
     @@students
