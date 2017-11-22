@@ -9,18 +9,11 @@ class Scraper
 #    profile_url = index_url.sub(/index\.html/,"") + roster.css("div.student-card a").attribute("href").value
 #    name = roster.css("div.student-card a div h4").first.text
 #    location = roster.css("div.student-card a div p").first.text
-    @@students = {}
+    @@students = []
 
     roster.css("div.student-card a").each do |student|
-      name = roster.css("div h4").text
       profile_url = index_url.sub(/index\.html/,"") + student.attribute("href").value
-      @@students[name.to_sym] = {
-        :name => name,
-        :location => student.css("div p").text,
-        :profile_url => profile_url
-      }
-      self.scrape_profile_page(profile_url)
-
+      @@students << Student.new(self.scrape_profile_page(profile_url))
     end
 
     @@students
@@ -30,23 +23,34 @@ class Scraper
   def self.scrape_profile_page(profile_url)
     html = File.read(profile_url)
     profile = Nokogiri::HTML(html)
-    name = profile.css("h1").text
-    @@students[name.to_sym] = {
-      :profile_quote => profile.css("div.profile-quote").text,
-      :bio => profile.css("div.description-holder p").text
-    }
+
+    twit = "N/A"
+    linked = "N/A"
+    git = "N/A"
+    blog = "N/A"
     profile.css("div.social-icon-container a").each do |link|
       social = link.attribute("href").value
       if social.match(/twitter/)
-        @@students[name.to_sym][:twitter] = social
+        twit = social
       elsif social.match(/linkedin/)
-        @@students[name.to_sym][:linkedin] = social
+        linked = social
       elsif social.match(/github/)
-        @@students[name.to_sym][:github] = social
+        git = social
       else
-        @@students[name.to_sym][:blog] = social
+        blog = social
       end
     end
+    {
+      :name => profile.css("h1").text,
+      :location => profile.css("h2").text,
+      :profile_url => profile_url,
+      :twitter => twit,
+      :linkedin => linked,
+      :github => git,
+      :blog => blog,
+      :profile_quote => profile.css("div.profile-quote").text,
+      :bio => profile.css("div.description-holder p").text
+    }
   end
 
 end
