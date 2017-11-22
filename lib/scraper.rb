@@ -24,10 +24,10 @@ class Scraper
     html = File.read(profile_url)
     profile = Nokogiri::HTML(html)
 
-    twit = "N/A"
-    linked = "N/A"
-    git = "N/A"
-    blog = "N/A"
+    twit = nil
+    linked = nil
+    git = nil
+    blog = nil
     profile.css("div.social-icon-container a").each do |link|
       social = link.attribute("href").value
       if social.match(/twitter/)
@@ -41,9 +41,9 @@ class Scraper
       end
     end
     {
-      :name => profile.css("h1").text,
-      :location => profile.css("h2").text,
-      :profile_url => profile_url,
+  #    :name => profile.css("h1").text,
+  #    :location => profile.css("h2").text,
+  #    :profile_url => profile_url,
       :twitter => twit,
       :linkedin => linked,
       :github => git,
