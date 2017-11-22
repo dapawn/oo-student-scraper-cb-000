@@ -13,7 +13,11 @@ class Scraper
 
     roster.css("div.student-card a").each do |student|
       profile_url = index_url.sub(/index\.html/,"") + student.attribute("href").value
-      @@students << self.scrape_profile_page(profile_url)
+      @@students << {
+        :name => student.css("div h4").text,
+        :location => student.css("div p").text,
+        :profile_url => profile_url
+      }.merge(self.scrape_profile_page(profile_url))
     end
 
     @@students
@@ -25,9 +29,9 @@ class Scraper
     profile = Nokogiri::HTML(html)
 
     attributes = {
-  #    :name => profile.css("h1").text,
-  #    :location => profile.css("h2").text,
-  #    :profile_url => profile_url,
+  #    :name => profile.css("h1").text,          # This would have been
+  #    :location => profile.css("h2").text,      # a better solution, but
+  #    :profile_url => profile_url,              # its not allowed by tests
       :profile_quote => profile.css("div.profile-quote").text,
       :bio => profile.css("div.description-holder p").text
     }
