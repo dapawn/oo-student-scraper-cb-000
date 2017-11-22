@@ -13,7 +13,7 @@ class Scraper
 
     roster.css("div.student-card a").each do |student|
       profile_url = index_url.sub(/index\.html/,"") + student.attribute("href").value
-      @@students << Student.new(self.scrape_profile_page(profile_url))
+      @@students << self.scrape_profile_page(profile_url)
     end
 
     @@students
