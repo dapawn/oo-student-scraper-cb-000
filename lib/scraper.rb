@@ -9,18 +9,14 @@ class Scraper
 #    profile_url = index_url.sub(/index\.html/,"") + roster.css("div.student-card a").attribute("href").value
 #    name = roster.css("div.student-card a div h4").first.text
 #    location = roster.css("div.student-card a div p").first.text
-    @@students = []
-
-    roster.css("div.student-card a").each do |student|
+    roster.css("div.student-card a").tap.each do |student|
       profile_url = student.attribute("href").value
-      @@students << {
+     {
         :name => student.css("div h4").text,
         :location => student.css("div p").text,
         :profile_url => profile_url
       }#.merge(self.scrape_profile_page(index_url.sub(/index\.html/,"") + profile_url))
     end
-
-    @@students
   end
 
 
