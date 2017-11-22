@@ -12,12 +12,12 @@ class Scraper
     @@students = []
 
     roster.css("div.student-card a").each do |student|
-      profile_url = index_url.sub(/index\.html/,"") + student.attribute("href").value
+      profile_url = student.attribute("href").value
       @@students << {
         :name => student.css("div h4").text,
         :location => student.css("div p").text,
         :profile_url => profile_url
-      }.merge(self.scrape_profile_page(profile_url))
+      }.merge(self.scrape_profile_page(index_url.sub(/index\.html/,"") + profile_url))
     end
 
     @@students
